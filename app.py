@@ -5,7 +5,10 @@ from router.chat_router import router as chat_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+
 app = FastAPI()
+
+
 
 
 # --- CORS setup ---

@@ -8,6 +8,7 @@ def callModel(model_name):
     llm_config = {
         "model_name": info['model_name'],
         "num_ctx": info['num_ctx'],
+        "num_predict" : min(4096, info['num_ctx'] // 2) ,
         "reasoning": "thinking" in info.get('capabilities', []),
     }
 

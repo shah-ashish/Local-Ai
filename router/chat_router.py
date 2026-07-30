@@ -4,6 +4,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from langchain_core.messages import SystemMessage, HumanMessage
 from Model import callModel
+from Utils.get_prompt import get_system_prompt
 
 router = APIRouter()
 
@@ -12,9 +13,10 @@ class ChatRequest(BaseModel):
 
 def generate_stream(message: str, modelname: str):
     model = callModel(modelname)
+    system_prompt = get_system_prompt(modelname)
 
     messages = [
-        SystemMessage(content="you are a worlds best teacher 'Susan'..."),
+        SystemMessage(content=system_prompt),
         HumanMessage(content=message)
     ]
 
