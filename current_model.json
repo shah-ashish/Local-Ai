@@ -1,0 +1,11 @@
+{
+  "model_name": "gemma3:270m",
+  "num_ctx": 32768,
+  "capabilities": [
+    "completion"
+  ],
+  "template_supported": true,
+  "family": "gemma3",
+  "parameter_size": "268.10M",
+  "quantization_level": "Q8_0"
+}
