@@ -1,9 +1,9 @@
 #!/bin/bash
-# colab.sh — run Local-Ai on Google Colab
+# collab.sh — run Local-Ai on Google Colab
 # Usage in a Colab cell:
-#   !bash colab.sh
+#   !bash collab.sh
 # or
-#   !wget -qO colab.sh https://raw.githubusercontent.com/shah-ashish/Local-Ai/main/colab.sh && bash colab.sh
+#   !wget -qO collab.sh https://raw.githubusercontent.com/shah-ashish/Local-Ai/main/collab.sh && bash collab.sh
 
 set -uo pipefail   # NOTE: not using -e, because we want controlled error messages, not silent kills
 
@@ -33,10 +33,10 @@ cd "$REPO_DIR" || fail "Could not cd into $REPO_DIR"
 # ---------------------------------------------------------------------------
 # 2. System deps: zstd, cloudflared
 # ---------------------------------------------------------------------------
-log "Step 2: Installing system packages (zstd)"
+log "Step 2: Installing system packages (zstd, python3-venv)"
 
 apt-get update -qq
-apt-get install -y -qq zstd || fail "zstd install failed"
+apt-get install -y -qq zstd python3-venv || fail "zstd/python3-venv install failed"
 
 # ---------------------------------------------------------------------------
 # 3. Install Ollama and start the server
@@ -97,6 +97,12 @@ log "Step 5: Setting up Python environment"
 
 if [ ! -f "app.py" ]; then
     fail "app.py not found in repo root. FastAPI server cannot start without it."
+fi
+
+# If .venv exists but is incomplete/broken (e.g. missing activation script), remove it to start fresh
+if [ -d ".venv" ] && [ ! -f ".venv/bin/activate" ]; then
+    echo "Found broken or incomplete .venv, removing it to start fresh..."
+    rm -rf .venv
 fi
 
 python3 -m venv .venv || fail "venv creation failed"
