@@ -33,10 +33,10 @@ cd "$REPO_DIR" || fail "Could not cd into $REPO_DIR"
 # ---------------------------------------------------------------------------
 # 2. System deps: zstd, cloudflared
 # ---------------------------------------------------------------------------
-log "Step 2: Installing system packages (zstd, python3-venv)"
+log "Step 2: Installing system packages (zstd)"
 
 apt-get update -qq
-apt-get install -y -qq zstd python3-venv || fail "zstd/python3-venv install failed"
+apt-get install -y -qq zstd || fail "zstd install failed"
 
 # ---------------------------------------------------------------------------
 # 3. Install Ollama and start the server
@@ -99,15 +99,7 @@ if [ ! -f "app.py" ]; then
     fail "app.py not found in repo root. FastAPI server cannot start without it."
 fi
 
-# If .venv exists but is incomplete/broken (e.g. missing activation script), remove it to start fresh
-if [ -d ".venv" ] && [ ! -f ".venv/bin/activate" ]; then
-    echo "Found broken or incomplete .venv, removing it to start fresh..."
-    rm -rf .venv
-fi
-
-python3 -m venv .venv || fail "venv creation failed"
-source .venv/bin/activate
-
+# In Colab, we use the pre-installed Python environment directly
 python -m pip install --upgrade pip --quiet
 
 if [ -f "requirements.txt" ]; then
