@@ -25,7 +25,8 @@ function Chat() {
 
     try {
       // call the FastAPI streaming endpoint
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const apiHost = window.location.port === "5173" ? "http://localhost:8000" : "";
+      const response = await fetch(`${apiHost}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
