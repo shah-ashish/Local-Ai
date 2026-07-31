@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useGlobal } from '../../GlobalContext'
 
 const AVAILABLE_MODELS = [
     { id: 'gemma3:270m', name: 'Gemma 3 (270M)', badge: 'Fast & Light' },
@@ -7,10 +8,10 @@ const AVAILABLE_MODELS = [
     { id: 'deepseek-r1:8b', name: 'DeepSeek R1 (8B)', badge: 'Reasoning' },
     { id: 'qwen2.5:7b', name: 'Qwen 2.5 (7B)', badge: 'General' },
     { id: 'gemma4:latest', name: 'Gemma 4 (4B)', badge: 'General' },
-
 ];
 
-const ToolBox = ({ selectedModel, setSelectedModel }) => {
+const ToolBox = () => {
+    const { selectedModel, setSelectedModel } = useGlobal();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 

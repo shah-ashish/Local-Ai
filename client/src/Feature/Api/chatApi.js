@@ -2,6 +2,7 @@
  * Central API module for Chat Feature
  * Connects to FastAPI /api/chat streaming endpoint.
  */
+import { parseStreamMarkers } from './streamParser';
 
 export async function streamChatMessage({ message, modelName, resume = null, signal = null, onRequestId, onChunk }) {
     const apiHost = window.location.port === "5173" ? "http://localhost:8000" : "";
@@ -40,47 +41,9 @@ export async function streamChatMessage({ message, modelName, resume = null, sig
             const chunk = decoder.decode(value, { stream: true });
             rawAccumulated += chunk;
 
-            let thinking = "";
-            let text = "";
-            let askChoice = null;
-
-            // Parse askChoice payload if [ASK_CHOICE] tag is present
-            let parsedAccumulated = rawAccumulated;
-            if (parsedAccumulated.includes("[ASK_CHOICE]")) {
-                const parts = parsedAccumulated.split("[ASK_CHOICE]");
-                const afterStart = parts[1] || "";
-                if (afterStart.includes("[/ASK_CHOICE]")) {
-                    const [choiceJson, rest] = afterStart.split("[/ASK_CHOICE]");
-                    try {
-                        askChoice = JSON.parse(choiceJson.trim());
-                    } catch (e) {
-                        console.error("Failed to parse askChoice JSON", e);
-                    }
-                    parsedAccumulated = parts[0] + rest;
-                } else {
-                    parsedAccumulated = parts[0];
-                }
-            }
-
-            if (parsedAccumulated.includes("[THINKING]")) {
-                const thinkingParts = parsedAccumulated.split("[THINKING]");
-                const afterThinkingStart = thinkingParts[1] || "";
-
-                if (afterThinkingStart.includes("[/THINKING]")) {
-                    const [thinkingContent, rest] = afterThinkingStart.split("[/THINKING]");
-                    thinking = thinkingContent;
-                    text = rest.replace(/\[RESPONSE\]|\[\/RESPONSE\]/g, "");
-                } else {
-                    thinking = afterThinkingStart;
-                }
-            } else {
-                text = parsedAccumulated.replace(/\[RESPONSE\]|\[\/RESPONSE\]/g, "");
-            }
-
+            const parsed = parseStreamMarkers(rawAccumulated);
             onChunk({
-                thinking: thinking.trim(),
-                text: text.replace(/^\n+|\n+$/g, ""),
-                askChoice,
+                ...parsed,
                 isDone: false,
             });
         }
@@ -94,46 +57,10 @@ export async function streamChatMessage({ message, modelName, resume = null, sig
     }
 
     // Final chunk emit
-    let thinking = "";
-    let text = "";
-    let askChoice = null;
-
-    let parsedAccumulated = rawAccumulated;
-    if (parsedAccumulated.includes("[ASK_CHOICE]")) {
-        const parts = parsedAccumulated.split("[ASK_CHOICE]");
-        const afterStart = parts[1] || "";
-        if (afterStart.includes("[/ASK_CHOICE]")) {
-            const [choiceJson, rest] = afterStart.split("[/ASK_CHOICE]");
-            try {
-                askChoice = JSON.parse(choiceJson.trim());
-            } catch (e) {
-                console.error("Failed to parse askChoice JSON", e);
-            }
-            parsedAccumulated = parts[0] + rest;
-        } else {
-            parsedAccumulated = parts[0];
-        }
-    }
-
-    if (parsedAccumulated.includes("[THINKING]")) {
-        const thinkingParts = parsedAccumulated.split("[THINKING]");
-        const afterThinkingStart = thinkingParts[1] || "";
-
-        if (afterThinkingStart.includes("[/THINKING]")) {
-            const [thinkingContent, rest] = afterThinkingStart.split("[/THINKING]");
-            thinking = thinkingContent;
-            text = rest.replace(/\[RESPONSE\]|\[\/RESPONSE\]/g, "");
-        } else {
-            thinking = afterThinkingStart;
-        }
-    } else {
-        text = parsedAccumulated.replace(/\[RESPONSE\]|\[\/RESPONSE\]/g, "");
-    }
-
+    const parsed = parseStreamMarkers(rawAccumulated);
     onChunk({
-        thinking: thinking.trim(),
-        text: text.trim(),
-        askChoice,
+        ...parsed,
+        text: parsed.text.trim(),
         isDone: true,
     });
 }

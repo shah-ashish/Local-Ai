@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from backend.llm.model_info import get_model_info
 
 def get_system_prompt(model_name: str) -> str:
@@ -17,6 +18,8 @@ def get_system_prompt(model_name: str) -> str:
     
     if os.path.exists(prompt_path):
         with open(prompt_path, "r", encoding="utf-8") as f:
-            return f.read().strip()
-            
-    return "You are a helpful assistant."
+            base_prompt = f.read().strip()
+    else:
+        base_prompt = "You are a helpful assistant."
+        
+    return f"Today's date is {datetime.now().strftime('%A, %B %d, %Y')}.\n\n{base_prompt}"

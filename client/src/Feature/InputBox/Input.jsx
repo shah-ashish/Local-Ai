@@ -1,38 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import SendUserMessage from './SendUserMessage'
 import ToolBox from './ToolBox'
+import { InputProvider } from './InputContext'
 
-const Input = ({ onSendMessage, selectedModel, setSelectedModel, loading, onStop }) => {
-    const [message, setMessage] = useState('');
-
-    const handleSend = () => {
-        if (!message.trim()) return;
-
-        if (onSendMessage) {
-            onSendMessage(message.trim(), selectedModel);
-        }
-
-        // Clear input box after sending
-        setMessage('');
-    };
-
+const InputContent = () => {
     return (
         <div className="w-3/5 h-28 rounded-2xl flex flex-col shadow-lg border border-gray-200 bg-white hover:border-blue-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all duration-200">
             {/* Input message section */}
-            <SendUserMessage
-                message={message}
-                setMessage={setMessage}
-                onSend={handleSend}
-                loading={loading}
-                onStop={onStop}
-            />
+            <SendUserMessage />
 
             {/* Bottom toolbox section */}
-            <ToolBox
-                selectedModel={selectedModel}
-                setSelectedModel={setSelectedModel}
-            />
+            <ToolBox />
         </div>
+    )
+}
+
+const Input = () => {
+    return (
+        <InputProvider>
+            <InputContent />
+        </InputProvider>
     )
 }
 

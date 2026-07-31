@@ -1,20 +1,30 @@
 import React from 'react'
+import { useInputContext } from './InputContext'
+import { useChatbox } from '../ChatBox/ChatboxContext'
+import { useGlobal } from '../../GlobalContext'
 
-const SendUserMessage = ({ message, setMessage, onSend, loading, onStop }) => {
+const SendUserMessage = () => {
+    const { message, setMessage } = useInputContext();
+    const { sendMessage, loading, stopMessage } = useChatbox();
+    const { selectedModel } = useGlobal();
+
+    const handleSend = () => {
+        if (!message.trim()) return;
+        sendMessage(message.trim(), selectedModel);
+        setMessage('');
+    };
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             if (!loading) {
-                onSend();
+                handleSend();
             }
         }
     };
 
     return (
         <div className="text-input-container w-full flex-1 flex items-center px-4 pt-2 gap-3">
-
-
-
             {/* Input Field */}
             <input
                 type="text"
@@ -29,7 +39,7 @@ const SendUserMessage = ({ message, setMessage, onSend, loading, onStop }) => {
             {loading ? (
                 <button
                     type="button"
-                    onClick={onStop}
+                    onClick={stopMessage}
                     title="Stop Generation"
                     className="send-btn w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 bg-red-500 hover:bg-red-600 text-white shadow-md hover:scale-105 active:scale-95 cursor-pointer animate-pulse"
                 >
@@ -40,7 +50,7 @@ const SendUserMessage = ({ message, setMessage, onSend, loading, onStop }) => {
             ) : (
                 <button
                     type="button"
-                    onClick={onSend}
+                    onClick={handleSend}
                     disabled={!message.trim()}
                     title="Send Message"
                     className={`send-btn w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${message.trim()
