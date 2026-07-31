@@ -15,16 +15,16 @@ call .venv\Scripts\activate.bat
 :: 3. Upgrade pip to avoid warnings
 python -m pip install --upgrade pip --quiet
 
-:: 4. Check for requirements.txt and install missing packages
-if exist requirements.txt (
+:: 4. Check for backend/requirements.txt and install missing packages
+if exist backend\requirements.txt (
     echo Checking and installing packages...
-    pip install -r requirements.txt --quiet
+    pip install -r backend\requirements.txt --quiet
 ) else (
-    echo Warning: requirements.txt not found. Skipping package installation.
+    echo Warning: backend\requirements.txt not found. Skipping package installation.
 )
 
 echo ============================
 echo Starting server!
 echo ============================
 
-call uvicorn app:app --reload --port 8000
+call uvicorn backend.app:app --reload --port 8000

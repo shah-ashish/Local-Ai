@@ -2,9 +2,9 @@
 # Local-Ai - One-Click Google Colab Launcher
 #
 # Usage in a Google Colab notebook cell:
-#   !curl -fsSL https://raw.githubusercontent.com/shah-ashish/Local-Ai/main/collab.sh | bash
+#   !curl -fsSL https://raw.githubusercontent.com/shah-ashish/Local-Ai/main/scripts/collab.sh | bash
 # Or if already inside the project directory:
-#   !bash collab.sh
+#   !bash scripts/collab.sh
 
 set -e
 
@@ -20,7 +20,7 @@ echo "  Local-Ai - Starting on Google Colab         "
 echo "=============================================="
 
 # 0. Clone repository if project files are not in current directory
-if [ ! -f "app.py" ]; then
+if [ ! -f "backend/app.py" ]; then
   if [ -d "$REPO_DIR" ]; then
     echo "- Found existing project folder '$REPO_DIR'. Entering directory..."
     cd "$REPO_DIR"
@@ -65,8 +65,8 @@ nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || echo "Notice: 
 
 # 2. Install Python backend dependencies
 echo "- Installing Python dependencies..."
-if [ -f "requirements.txt" ]; then
-  pip install -q -r requirements.txt
+if [ -f "backend/requirements.txt" ]; then
+  pip install -q -r backend/requirements.txt
 else
   pip install -q fastapi uvicorn
 fi
@@ -128,4 +128,4 @@ echo ""
 
 # 5. Launch FastAPI application server
 echo "- Launching FastAPI backend server on port $SERVER_PORT..."
-python3 -m uvicorn app:app --host 0.0.0.0 --port "$SERVER_PORT"
+python3 -m uvicorn backend.app:app --host 0.0.0.0 --port "$SERVER_PORT"

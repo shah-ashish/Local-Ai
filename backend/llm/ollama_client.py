@@ -1,5 +1,5 @@
-
 from langchain_ollama import ChatOllama
+from backend.utils.tools import TOOLS
 
 def llm(llm_config: dict | None = None):
     llm_config = llm_config or {}
@@ -11,4 +11,8 @@ def llm(llm_config: dict | None = None):
         repeat_penalty=llm_config.get("repeat_penalty", 1.3),
         reasoning=llm_config.get("reasoning", False),
     )
+    
+    if llm_config.get("tools_enabled"):
+        response = response.bind_tools(TOOLS)
+        
     return response

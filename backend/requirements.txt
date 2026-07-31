@@ -1,0 +1,8 @@
+langchain
+langchain-ollama
+fastapi 
+uvicorn
+aiofiles
+ddgs==9.14.4
+beautifulsoup4==4.12.3
+requests==2.32.3

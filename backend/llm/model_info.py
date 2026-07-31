@@ -2,7 +2,11 @@ import json
 import os
 import requests
 
-CACHE_FILE = "current_model.json"
+CACHE_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    ".cache",
+    "current_model.json"
+)
 
 
 def _load_cache(cache_file: str = CACHE_FILE) -> dict | None:
@@ -17,6 +21,9 @@ def _load_cache(cache_file: str = CACHE_FILE) -> dict | None:
 
 
 def _save_cache(info: dict, cache_file: str = CACHE_FILE) -> None:
+    cache_dir = os.path.dirname(cache_file)
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir, exist_ok=True)
     with open(cache_file, "w") as f:
         json.dump(info, f, indent=2)
 
@@ -72,5 +79,3 @@ def get_model_info(
 
     _save_cache(result, cache_file)
     return result
-
-

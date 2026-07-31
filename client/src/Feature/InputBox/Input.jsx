@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SendUserMessage from './SendUserMessage'
 import ToolBox from './ToolBox'
 
-const Input = ({ onSendMessage, selectedModel, setSelectedModel }) => {
+const Input = ({ onSendMessage, selectedModel, setSelectedModel, loading, onStop }) => {
     const [message, setMessage] = useState('');
 
     const handleSend = () => {
@@ -23,6 +23,8 @@ const Input = ({ onSendMessage, selectedModel, setSelectedModel }) => {
                 message={message}
                 setMessage={setMessage}
                 onSend={handleSend}
+                loading={loading}
+                onStop={onStop}
             />
 
             {/* Bottom toolbox section */}

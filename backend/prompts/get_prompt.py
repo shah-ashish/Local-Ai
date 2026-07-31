@@ -1,5 +1,5 @@
 import os
-from Show_model_info import get_model_info
+from backend.llm.model_info import get_model_info
 
 def get_system_prompt(model_name: str) -> str:
     info = get_model_info(model_name)
@@ -12,14 +12,11 @@ def get_system_prompt(model_name: str) -> str:
     else:
         prompt_file = "MINIMAL.txt"
         
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    prompt_path = os.path.join(base_dir, "SystemPrompt", prompt_file)
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    prompt_path = os.path.join(base_dir, prompt_file)
     
     if os.path.exists(prompt_path):
         with open(prompt_path, "r", encoding="utf-8") as f:
             return f.read().strip()
             
     return "You are a helpful assistant."
-
-
-    

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import User from './User'
 import Ai from './Ai'
 
-const Chatbox = ({ messages = [], onResend, onRegenerate }) => {
+const Chatbox = ({ messages = [], onResend, onRegenerate, onAnswer }) => {
     const chatEndRef = useRef(null);
 
     useEffect(() => {
@@ -44,6 +44,8 @@ const Chatbox = ({ messages = [], onResend, onRegenerate }) => {
                                 message={msg.text || msg.message}
                                 modelName={msg.modelName || msg.model}
                                 thinking={msg.thinking}
+                                askChoice={msg.askChoice}
+                                onAnswer={(answerText) => onAnswer && onAnswer(msg, answerText)}
                                 onRegenerate={() => onRegenerate && onRegenerate(msg, index)}
                             />
                         );

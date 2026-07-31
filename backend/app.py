@@ -1,15 +1,11 @@
 # main.py
 import os
 from fastapi import FastAPI
-from router.chat_router import router as chat_router
+from backend.router.chat_router import router as chat_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-
 app = FastAPI()
-
-
-
 
 # --- CORS setup ---
 app.add_middleware(
@@ -19,7 +15,6 @@ app.add_middleware(
     allow_methods=["*"],   # allow GET, POST, etc.
     allow_headers=["*"],   # allow custom headers like "modelname"
 )
-
 
 app.include_router(chat_router, prefix="/api")
 
