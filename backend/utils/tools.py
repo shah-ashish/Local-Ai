@@ -122,7 +122,7 @@ def web_search(query: str) -> str:
 def scrape_webpage(url: str) -> str:
     """Fetches a URL and extracts clean webpage text capped at 4000 characters.
 
-    Use this to read the details of specific URLs or websites the user shares.
+    Use this after web_search when you need real article content — not just a snippet — to answer a current-events or factual question with specifics.
     """
     try:
         headers = {

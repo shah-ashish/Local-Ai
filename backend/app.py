@@ -2,6 +2,7 @@
 import os
 from fastapi import FastAPI
 from backend.router.chat_router import router as chat_router
+from backend.router.model_router import router as model_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -17,6 +18,7 @@ app.add_middleware(
 )
 
 app.include_router(chat_router, prefix="/api")
+app.include_router(model_router, prefix="/api")
 
 # Serve frontend build if it exists
 if os.path.exists("client/dist"):

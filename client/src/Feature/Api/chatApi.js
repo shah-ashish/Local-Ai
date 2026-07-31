@@ -4,15 +4,16 @@
  */
 import { parseStreamMarkers } from './streamParser';
 
+export const API_HOST = window.location.port === "5173" ? "http://localhost:8000" : "";
+
 export async function streamChatMessage({ message, modelName, resume = null, signal = null, onRequestId, onChunk }) {
-    const apiHost = window.location.port === "5173" ? "http://localhost:8000" : "";
     const requestId = crypto.randomUUID();
 
     if (onRequestId) {
         onRequestId(requestId);
     }
 
-    const response = await fetch(`${apiHost}/api/chat`, {
+    const response = await fetch(`${API_HOST}/api/chat`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -66,9 +67,8 @@ export async function streamChatMessage({ message, modelName, resume = null, sig
 }
 
 export async function stopChatMessage(requestId) {
-    const apiHost = window.location.port === "5173" ? "http://localhost:8000" : "";
     try {
-        const response = await fetch(`${apiHost}/api/chat/stop`, {
+        const response = await fetch(`${API_HOST}/api/chat/stop`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

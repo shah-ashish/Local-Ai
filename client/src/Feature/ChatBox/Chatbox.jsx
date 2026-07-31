@@ -59,7 +59,7 @@ const Chatbox = () => {
                                 modelName={msg.modelName || msg.model}
                                 thinking={msg.thinking}
                                 askChoice={msg.askChoice}
-                                onAnswer={resumeWithAnswer}
+                                onAnswer={(answer) => resumeWithAnswer(msg, answer)}
                                 onRegenerate={() => handleRegenerate(msg, index)}
                             />
                         );
